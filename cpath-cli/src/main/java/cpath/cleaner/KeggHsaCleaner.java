@@ -19,11 +19,11 @@ import cpath.service.Cleaner;
 
 /**
  * Implementation of Cleaner interface 
- * for converted to BioPAX KEGG human pathway data
+ * for converted to BioPAX KEGG yeast pathway data
  * (provided by BioModels, Andreas Draeger).
  * 
  * Can normalize URIs for KEGG Pathways 
- * to http://identifiers.org/kegg.pathway/hsa*
+ * to http://identifiers.org/kegg.pathway/sce*
  */
 final class KeggHsaCleaner implements Cleaner {
 
@@ -45,7 +45,7 @@ final class KeggHsaCleaner implements Cleaner {
 			//normally there is only one such xref
 			if(!uxrefs.isEmpty()) {
 				UnificationXref x = uxrefs.iterator().next();
-				if(x.getId() != null && x.getId().startsWith("hsa")) {
+				if(x.getId() != null && x.getId().startsWith("sce")) {
 					String uri = "http://identifiers.org/kegg.pathway/" + x.getId();
 					
 					if(!model.containsID(uri) && !newUriToEntityMap.containsKey(uri)) {

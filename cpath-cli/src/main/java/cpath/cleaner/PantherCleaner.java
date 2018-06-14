@@ -27,7 +27,7 @@ import cpath.service.Cleaner;
 /**
  * Cleaner for the PANTHER Pathway 3.4.1 BioPAX model
  * 
- * Remove non-human entity references. Add "dangling" Controls to Pathways.
+ * Remove non-yeast entity references. Add "dangling" Controls to Pathways.
  */
 final class PantherCleaner implements Cleaner {
 	
@@ -38,18 +38,19 @@ final class PantherCleaner implements Cleaner {
 	{	
 		SimpleIOHandler simpleReader = new SimpleIOHandler(BioPAXLevel.L3);
 		Model originalModel = simpleReader.convertFromOWL(data);
-		
-		//find "human" (BioSource); it's already there normalized - uses Identifiers.org URI
-		final BioSource human = (BioSource) originalModel.getByID("9606");
-		// - new version PANTHER pathway data contain URIS and xrefs like that, unfortunately...
-		if(human == null) //fail shortly (importer must skip this dataFile)
-			throw new RuntimeException("Human data (e.g. BioSource) not found.");
+
+		//get yeast BioSource (559292); it's already there normalized - uses Identifiers.org URI
+		BioSource bioSource = (BioSource) originalModel.getByID("559292");
+		if(bioSource == null) {
+			//fail shortly (importer must skip this dataFile)
+			throw new RuntimeException("Yeast data (BioSource 559292) not found.");
+		}
 
 		// fix the taxonomy xref.db standard name
-		human.getXref().iterator().next().setDb("Taxonomy");
+		bioSource.getXref().iterator().next().setDb("Taxonomy");
 		
-		//Remove/replace non-human BioSources, SequenceEntityReferences 
-		//Pathways all have organism=null; let's set 'human' for all
+		//Remove/replace non-yeast BioSources, SequenceEntityReferences
+		//Pathways all have organism=null; let's set 'yeast' for all
 		//Use parallel execution
 		ExecutorService exec = Executors.newFixedThreadPool(3);
 		//make a copy of all model's objects set to avoid concurrent modification exceptions.
@@ -57,14 +58,14 @@ final class PantherCleaner implements Cleaner {
 		final Model model = originalModel;
 		exec.execute(() -> {
 			for(BioPAXElement o : objects) {
-				if((o instanceof BioSource) && !human.equals(o)) {
+				if((o instanceof BioSource) && !bioSource.equals(o)) {
 					model.remove(o);
 				}
 			}
 		});
 		exec.execute(() -> {
-			for(SequenceEntityReference er : new ClassFilterSet<BioPAXElement, SequenceEntityReference>(objects, SequenceEntityReference.class)) {
-				if(er.getOrganism() != null && !er.getOrganism().equals(human)) {
+			for(SequenceEntityReference er : new ClassFilterSet<>(objects, SequenceEntityReference.class)) {
+				if(er.getOrganism() != null && !er.getOrganism().equals(bioSource)) {
 					model.remove(er);
 					for(SimplePhysicalEntity spe : new HashSet<>(er.getEntityReferenceOf()))
 						spe.setEntityReference(null);
@@ -74,11 +75,11 @@ final class PantherCleaner implements Cleaner {
 			}
 		});
 		exec.execute(() -> {
-			for(Pathway p : new ClassFilterSet<BioPAXElement, Pathway>(objects, Pathway.class)) {
+			for(Pathway p : new ClassFilterSet<>(objects, Pathway.class)) {
 				if(p.getUri().startsWith("http://identifiers.org/panther.pathway/")
 						|| !p.getPathwayComponent().isEmpty()
 						|| !p.getPathwayOrder().isEmpty()) { //- seems they don't use pathwayOrder property, anyway
-					p.setOrganism(human);
+					p.setOrganism(bioSource);
 				} else //black box and no-components pathways
 					p.setOrganism(null); //clear in case it's set to other org.
 			}
@@ -105,9 +106,8 @@ final class PantherCleaner implements Cleaner {
 		final Model cleanModel = (new Cloner(SimpleEditorMap.L3, BioPAXLevel.L3.getDefaultFactory()))
 				.clone(originalModel, originalModel.getObjects());		
 		log.info((objects.size()-cleanModel.getObjects().size())
-				+ " non-human objects (and all corresponding properties) were cleared.");
-		originalModel = null; // free some memory, perhaps...
-		
+				+ " non-yeast objects (and all corresponding properties) were cleared.");
+
 		if(cleanModel.getObjects(BioSource.class).size() != 1)
 			throw new IllegalStateException("There are still several BioSource objects");
 		

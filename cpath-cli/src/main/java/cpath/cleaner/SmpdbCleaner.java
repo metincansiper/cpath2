@@ -32,10 +32,10 @@ final class SmpdbCleaner implements Cleaner {
 		Model model = simpleReader.convertFromOWL(data);
 
 // As we managed to get only human data archive from SMPDB there is no need for filtering by organism anymore -
-		if(!model.containsID(model.getXmlBase() + "Reference/TAXONOMY_9606")
-				&& !model.containsID(model.getXmlBase() + "Reference/Taxonomy_9606")
+		if(!model.containsID(model.getXmlBase() + "Reference/TAXONOMY_4932")
+				&& !model.containsID(model.getXmlBase() + "Reference/Taxonomy_4932")
 				&& !model.getObjects(BioSource.class).isEmpty())
-			throw new RuntimeException("Highly likely non-human datafile (skip).");
+			throw new RuntimeException("Highly likely non-yeast datafile (skip).");
 
 		// Normalize Pathway URIs KEGG stable id, where possible
 		Set<Pathway> pathways = new HashSet<>(model.getObjects(Pathway.class));
@@ -68,24 +68,6 @@ final class SmpdbCleaner implements Cleaner {
 						pp.removePathwayComponent(pathway);
 				}
 			}
-
-//				Set<UnificationXref> uxrefs = new ClassFilterSet<>(new HashSet<>(pw.getXref()), UnificationXref.class);
-//				//normally there are two unif. xrefs, e.g., SMP00016 and PW000149, per pathway
-//				for (UnificationXref x : uxrefs) {
-//					if (x.getId() == null)
-//						continue;
-//					if (x.getId().startsWith("SMP")) { // 15-Apr-2018
-//						String uri = "http://identifiers.org/smpdb/" + x.getId();
-//						if (!model.containsID(uri)) {
-//							CPathUtils.replaceID(model, pw, uri);
-//						} else {
-//							//collect to replace the duplicate with equivalent, normalized URI pathway
-//							replacements.put(pw, (Pathway) model.getByID(uri));
-//							model.remove(pw);
-//						}
-//						break;
-//					}
-//				}
 		}
 
 		for(Named o : model.getObjects(Named.class)) {
