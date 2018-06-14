@@ -13,10 +13,12 @@ import java.util.zip.ZipFile;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.BioSource;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PantherCleanerTest {
 
+	@Ignore //it was for main branch - human data
 	@Test
 	public final void testClean() throws IOException {
 		Path f = Paths.get(getClass().getClassLoader().getResource("").getPath(),"testCleanPanther.owl");

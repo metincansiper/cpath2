@@ -14,15 +14,17 @@ import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.*;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import cpath.service.Cleaner;
 
-public class KeggHsaCleanerTest {
+public class KeggSceCleanerTest {
 
+	@Ignore // was for human version
 	@Test
 	public final void testClean() throws IOException {	
-		Cleaner cleaner = new KeggHsaCleaner();
+		Cleaner cleaner = new KeggSceCleaner();
 		final String testPathwayUri = "http://identifiers.org/kegg.pathway/hsa00010";
 
 		String f10 = getClass().getClassLoader().getResource("").getPath() 

@@ -8,6 +8,7 @@ import org.biopax.paxtools.model.BioPAXLevel;
 import org.biopax.paxtools.model.Model;
 import org.biopax.paxtools.model.level3.Pathway;
 import org.biopax.paxtools.model.level3.PathwayStep;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,6 +20,7 @@ import static org.junit.Assert.*;
 
 public class SmpdbCleanerTest {
 
+	@Ignore // was for human data and cleaner
 	@Test
 	public final void testClean() throws IOException {	
 		Cleaner cleaner = new SmpdbCleaner();

@@ -25,9 +25,9 @@ import cpath.service.Cleaner;
  * Can normalize URIs for KEGG Pathways 
  * to http://identifiers.org/kegg.pathway/sce*
  */
-final class KeggHsaCleaner implements Cleaner {
+final class KeggSceCleaner implements Cleaner {
 
-    private static Logger log = LoggerFactory.getLogger(KeggHsaCleaner.class);
+    private static Logger log = LoggerFactory.getLogger(KeggSceCleaner.class);
 
     public void clean(InputStream data, OutputStream cleanedData)
 	{	
