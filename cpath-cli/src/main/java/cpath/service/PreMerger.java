@@ -7,6 +7,7 @@ import cpath.jpa.Mapping;
 import cpath.jpa.Metadata;
 import cpath.jpa.Metadata.METADATA_TYPE;
 
+import org.apache.commons.io.IOUtils;
 import org.biopax.paxtools.controller.ModelUtils;
 import org.biopax.paxtools.io.SimpleIOHandler;
 import org.biopax.paxtools.model.*;
@@ -334,8 +335,11 @@ public final class PreMerger {
 				log.info("pipeline(), re-use " + outputFile.getName());
 			} else {
 				try {
-					cleaner.clean(new GZIPInputStream(new FileInputStream(inputFile)),
-							new GZIPOutputStream(new FileOutputStream(outputFile))); //os must be closed inside the method
+					InputStream is = new GZIPInputStream(new FileInputStream(inputFile));
+					OutputStream os = new GZIPOutputStream(new FileOutputStream(outputFile));
+					cleaner.clean(is, os);
+					IOUtils.closeQuietly(is);
+					IOUtils.closeQuietly(os);
 				} catch (Exception e) {
 					log.warn("pipeline(), fail " + info + " due to " + cleanerClassName + " failed: " + e);
 					return;
@@ -357,8 +361,11 @@ public final class PreMerger {
 				log.info("pipeline(), re-use " + outputFile.getName());
 			} else {
 				try {
-					converter.convert(new GZIPInputStream(new FileInputStream(inputFile)),
-							new GZIPOutputStream(new FileOutputStream(outputFile)));//must be closed inside
+					InputStream is = new GZIPInputStream(new FileInputStream(inputFile));
+					OutputStream os = new GZIPOutputStream(new FileOutputStream(outputFile));
+					converter.convert(is, os);//must be closed inside
+					IOUtils.closeQuietly(is);
+					IOUtils.closeQuietly(os);
 				} catch (Exception e) {
 					log.warn("pipeline(), fail " + info + " due to " + converterClassName + " failed: " + e);
 					return;
@@ -373,7 +380,9 @@ public final class PreMerger {
 		if(Files.exists(Paths.get(content.normalizedFile()))) {
 			log.warn("checkAndNormalize, skip validation/normalization - use existing data files.");
 		} else {
-			checkAndNormalize(info, new GZIPInputStream(new FileInputStream(inputFile)), metadata, content);
+			InputStream is = new GZIPInputStream(new FileInputStream(inputFile));
+			checkAndNormalize(info, is, metadata, content);
+			IOUtils.closeQuietly(is);
 		}
 	}
 
