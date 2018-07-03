@@ -14,30 +14,14 @@
 				</button>
 				<a class="navbar-brand" href="${cpath.url}">
 				 <img alt="Project Team Logo" src="${cpath.logoUrl}" id="team-logo"/>&nbsp;
-				 <c:out value="${cpath.name} Web Service v${cpath.version}"/>&nbsp;
-				 <c:if test="${cpath.adminEnabled}"><strong>(Maintenance mode)</strong></c:if>
+				 <c:out value="${cpath.name} Web Service v${cpath.version}"/>
 				</a>
 			  </div>              
               <div class="collapse navbar-collapse pull-right" id="top-navbar-collapse">
                   <ul class="nav navbar-nav">
-					<li class="dropdown">
-                  		<a href="#" class="dropdown-toggle" data-toggle="dropdown">Web Service<b class="caret"></b></a>
-                  		<span class="dropdown-arrow"></span>
-                  		<ul class="dropdown-menu">
-						<spring:url value="/home" var="home" />
-                  		 <li><a href="${home}" class="smooth-scroll">About</a></li>
-                  		 <li class="divider"></li>
-               			 <li><a href="${home}#search" class="smooth-scroll">Search</a></li>
-               			 <li><a href="${home}#get" class="smooth-scroll">Get</a></li>
-               			 <li><a href="${home}#traverse" class="smooth-scroll">Traverse</a></li>
-               			 <li><a href="${home}#graph" class="smooth-scroll">Graph</a></li>
-               			 <li><a href="${home}#top_pathways" class="smooth-scroll">Top pathways</a></li>
-                    	 <li class="divider"></li>
-                    	 <li><a href="${home}#parameter_values" class="smooth-scroll">Values</a></li>
-                    	</ul>
-                	</li>
+					<li><a href="<spring:url value='/home'/>">About</a></li>
 					<li><a href="<spring:url value='/datasources'/>">Providers</a></li>
-					<li><a href="<spring:url value='/downloads'/>">Downloads</a></li>
+					<li><a href="${cpath.url}/archives">Downloads</a></li>
                   </ul>
           	  </div> <!-- collapse -->
       </div> <!-- container -->
