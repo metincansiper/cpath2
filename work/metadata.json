@@ -362,6 +362,20 @@
       "availability": "free",
       "type": "PSI_MITAB",
       "pubmedId": "23180781"
+    },
+    {
+      "dataUrl": "https:\/\/unstable.factoid.baderlab.org\/api\/document\/zip\/biopax",
+      "identifier": "factoid",
+      "homepageUrl": "https:\/\/biofactoid.org",
+      "name": [
+        "InnateDB"
+      ],
+      "converterClass": "cpath.converter.PsimiTabConverter",
+      "description": "InnateDB Curated Interactions (human), downloaded 2019-09-01",
+      "iconUrl": "",
+      "availability": "free",
+      "type": "BIOPAX",
+      "pubmedId": ""
     }
   ]
 }
